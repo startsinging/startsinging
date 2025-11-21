@@ -1,28 +1,30 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // Zaroori HTML elements ko dhundo
-    const welcomeHeading = document.getElementById('welcome-heading');
+    const splashScreen = document.getElementById('splash-screen'); // Splash Screen
+    const mainContent = document.getElementById('main-content'); // Poora main content
     const registerBtn = document.getElementById('google-register-btn');
     const registerSection = document.getElementById('register-section');
     const profileSection = document.getElementById('profile-form-section');
     const categorySection = document.getElementById('category-selection');
-    const profileForm = document.getElementById('profile-form'); // Form element bhi
+    const profileForm = document.getElementById('profile-form'); 
     
-    // Default setting: Profile aur Category sections hidden
-    profileSection.style.display = 'none';
-    categorySection.style.display = 'none';
-
     // **********************************************
-    // 1. PAGE LOAD ANIMATION LOGIC
+    // 1. SPLASH SCREEN LOGIC (YouTube Style)
     // **********************************************
     
-    // Heading par animation class add karo
-    welcomeHeading.classList.add('animate-welcome');
-    
-    // Animation khatam hone ke baad button ko fade-in karo
+    // Page load hone ke 2.5 seconds (2500ms) baad splash screen gayab hoga
     setTimeout(() => {
-        registerBtn.style.opacity = '1';
-    }, 1500); 
+        splashScreen.classList.add('fade-out'); // CSS se fade-out shuru
+        
+        // Splash screen fade-out hone ke baad main content dikhao
+        setTimeout(() => {
+            splashScreen.style.display = 'none';
+            mainContent.style.display = 'block';
+            mainContent.classList.add('fade-in'); // Main content ko fade-in karo
+        }, 500); // 0.5s ka delay (CSS transition ke liye)
+
+    }, 2500); // 2.5 seconds splash screen dikhega
 
 
     // **********************************************
@@ -32,21 +34,31 @@ document.addEventListener('DOMContentLoaded', function() {
     // Google Register Button click event
     registerBtn.addEventListener('click', function() {
         
-        // Agar aap chahte hain ki yeh alert na aaye toh is line ko remove kar dena
-        alert("Google Registration Successful! (Internal App Flow) Ab apni details fill karein.");
+        // Ye line asli Google sign-up experience ko simulate karti hai
+        const username = prompt("Sign in with Google successful! Please set your desired Username:");
         
-        // Welcome section ko chhupa do
-        registerSection.style.display = 'none'; 
-        
-        // Profile Form ko dikhao
-        profileSection.style.display = 'block';
+        if (username) {
+            // Agar user ne username diya
+            alert(`Welcome, ${username}! Now complete your profile.`);
+            
+            // Username field ko auto-fill karo
+            document.getElementById('username').value = username;
+
+            // Welcome section ko chhupa do
+            registerSection.style.display = 'none'; 
+            
+            // Profile Form ko dikhao
+            profileSection.style.display = 'block';
+        } else {
+            alert("Registration cancelled or username not provided.");
+        }
     });
     
     // Profile Form submit event
     profileForm.addEventListener('submit', function(event) {
-        event.preventDefault(); // Page reload hone se roko
+        event.preventDefault(); 
         
-        alert("Profile Saved! Ab categories select karein.");
+        alert("Profile Saved! Now select categories.");
 
         // Profile Form ko chhupa do
         profileSection.style.display = 'none';
@@ -54,9 +66,4 @@ document.addEventListener('DOMContentLoaded', function() {
         // Category Selection ko dikhao
         categorySection.style.display = 'block';
     });
-    
-    // **********************************************
-    // 3. THEME/DARK MODE LOGIC (Aage use hoga)
-    // **********************************************
-    // Abhi humne theme button add nahi kiya, par future ke liye yeh logic ready hai
 });
