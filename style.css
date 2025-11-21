@@ -1,1 +1,60 @@
+document.addEventListener('DOMContentLoaded', function() {
+    
+    // Zaroori HTML elements ko dhundo (IDs use karke)
+    const welcomeHeading = document.getElementById('welcome-heading');
+    const registerBtn = document.getElementById('google-register-btn');
+    const registerSection = document.getElementById('register-section'); // Nayi ID
+    const profileSection = document.getElementById('profile-form-section');
+    const categorySection = document.getElementById('category-selection');
 
+    // Category section aur Profile form ko shuru mein hide rakho
+    profileSection.style.display = 'none';
+    categorySection.style.display = 'none';
+
+    // **********************************************
+    // 1. PAGE LOAD ANIMATION
+    // **********************************************
+    
+    // Heading par animation class add karo, taki animation chalu ho
+    welcomeHeading.classList.add('animate-welcome');
+    
+    // Animation khatam hone ke baad button ko fade-in karo
+    setTimeout(() => {
+        registerBtn.style.opacity = '1';
+    }, 1500); 
+
+
+    // **********************************************
+    // 2. REGISTRATION/FLOW LOGIC
+    // **********************************************
+
+    // Jab koi Register button dabata hai
+    registerBtn.addEventListener('click', function() {
+        
+        // Asliyat mein Google API call yahan hoti hai.
+        alert("Google Registration Successful! Ab apni details fill karein.");
+        
+        // Welcome section ko chhupa do
+        registerSection.style.display = 'none'; 
+        
+        // Profile Form ko dikhao
+        profileSection.style.display = 'block';
+    });
+    
+    // Jab koi Profile Form submit karta hai
+    const profileForm = document.getElementById('profile-form');
+    profileForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Page ko reload hone se roko
+        
+        // Yahan server par profile data save karne ka code aayega.
+
+        alert("Profile Saved! Ab categories select karein.");
+
+        // Profile Form ko chhupa do
+        profileSection.style.display = 'none';
+
+        // Category Selection ko dikhao
+        categorySection.style.display = 'block';
+    });
+});
+  
