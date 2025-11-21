@@ -1,14 +1,52 @@
 /* ================================== */
+/* Splash Screen (YouTube Style) */
+/* ================================== */
+#splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #FF0000; /* YouTube/Action ka Red Color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Sabse upar rahega */
+    transition: opacity 0.5s ease-out; /* Fade out effect ke liye */
+}
+
+.mic-icon {
+    font-size: 8em;
+    animation: pulse 1s infinite alternate; /* Icon ko thoda hilana (pulse effect) */
+}
+
+@keyframes pulse {
+    from {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    to {
+        transform: scale(1.05);
+        opacity: 1;
+    }
+}
+
+/* Splash screen jab gayab ho jayega */
+.fade-out {
+    opacity: 0;
+    pointer-events: none; /* Click hone se rokta hai */
+}
+
+/* ================================== */
 /* General Styles (Design) */
 /* ================================== */
 body {
-    font-family: 'Georgia', serif; /* Font change for better looks */
+    font-family: 'Georgia', serif;
     text-align: center;
     padding-top: 50px;
     margin: 0;
     background-color: #f4f4f9;
     color: #333;
-    transition: background-color 0.5s, color 0.5s; /* Smooth transition for theme change */
 }
 
 /* Common Section Styling */
@@ -19,7 +57,6 @@ body {
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.5s, box-shadow 0.5s;
 }
 
 h1 {
@@ -28,60 +65,58 @@ h1 {
 }
 
 /* ================================== */
-/* Dark Mode Theme Setup (Aage use hoga) */
-/* ================================== */
-.dark-mode {
-    background-color: #121212;
-    color: #e0e0e0;
-}
-
-.dark-mode .content-section {
-    background-color: #1e1e1e;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-}
-
-.dark-mode h1 {
-    color: #66BB6A; /* Lighter green for dark mode */
-}
-/* ================================== */
 /* Button & Form Styles */
 /* ================================== */
 #google-register-btn {
     padding: 12px 25px;
-    background-color: #DB4437;
+    background-color: #DB4437; /* Google's Red Color */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.1em;
     font-weight: bold;
-    opacity: 0; /* Animation ke liye */
-    transition: opacity 1s ease-out; 
+    opacity: 1; /* Ab yeh shuru se dikhega, splash ke baad */
+    transition: background-color 0.3s; 
     margin-top: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-/* ... (Baki form styles same hain) ... */
-
-/* ================================== */
-/* Animation Code */
-/* ================================== */
-@keyframes fadeInSlideUp {
-    from {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+#google-register-btn:hover {
+    background-color: #c0392b;
 }
 
-#welcome-heading {
-    opacity: 0; 
-    transform: translateY(20px); 
+/* Form inputs ko stylish banana */
+form input[type="text"], 
+form textarea,
+form select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 15px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
 }
 
-.animate-welcome {
-    animation: fadeInSlideUp 1.5s ease-out forwards; 
+form button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+/* ================================== */
+/* Fade-in Animation for Main Content */
+/* ================================== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out forwards;
 }
