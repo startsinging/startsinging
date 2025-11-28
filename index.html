@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Start Singing — Signup</title>
+  <style>
+    /* minimal Canva-like UI */
+    body{font-family:Inter,Arial;margin:0;background:#f6f7fb;display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{width:360px;background:#fff;padding:22px;border-radius:14px;box-shadow:0 6px 30px rgba(15,23,42,0.08);text-align:center}
+    .btn{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;border:1px solid #e6e9ef;margin:8px 0;cursor:pointer;font-weight:600}
+    .google{background:white}
+    .apple{background:#111;color:#fff}
+    .microsoft{background:#fff}
+    .yahoo{background:#52057b;color:#fff}
+    .email{background:#2563eb;color:#fff}
+    .small{font-size:13px;color:#6b7280;margin-top:10px}
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+</head>
+<body>
+  <div class="card">
+    <h2>Start Singing 🎤</h2>
+    <p class="small">Create your account</p>
+
+    <div id="buttons">
+      <div class="btn google" onclick="socialSignIn('google')">
+        <img src="https://www.svgrepo.com/show/355037/google.svg" width="20" alt=""> Continue with Google
+      </div>
+
+      <div class="btn apple" onclick="socialSignIn('apple')">
+        <img src="https://www.svgrepo.com/show/303128/apple-logo.svg" width="18" alt=""> Continue with Apple
+      </div>
+
+      <div class="btn microsoft" onclick="socialSignIn('microsoft')">
+        <img src="https://www.svgrepo.com/show/355035/microsoft.svg" width="18" alt=""> Continue with Microsoft
+      </div>
+
+      <div class="btn yahoo" onclick="socialSignIn('yahoo')">
+        <img src="https://www.svgrepo.com/show/354939/yahoo.svg" width="18" alt=""> Continue with Yahoo
+      </div>
+
+      <div style="height:10px"></div>
+
+      <input id="email" placeholder="Email" style="width:100%;padding:10px;border-radius:10px;border:1px solid #e6e9ef;margin-bottom:8px">
+      <input id="password" type="password" placeholder="Password (min 6)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #e6e9ef;margin-bottom:8px">
+      <div class="btn email" onclick="emailSignUp()">Sign up with Email</div>
+
+      <p id="msg" class="small" style="color:#dc2626"></p>
+    </div>
+  </div>
+
+<script>
+  // === 1) Paste your Firebase config below ===
+  const firebaseConfig = {
+    apiKey: "REPLACE_API_KEY",
+    authDomain: "REPLACE_AUTH_DOMAIN", // e.g. project-id.firebaseapp.com
+    projectId: "REPLACE_PROJECT_ID",
+    appId: "REPLACE_APP_ID"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Map provider names to Firebase provider objects
+  function getProvider(name) {
+    if (name === 'google') return new firebase.auth.GoogleAuthProvider();
+    if (name === 'apple') return new firebase.auth.OAuthProvider('apple.com');
+    if (name === 'microsoft') return new firebase.auth.OAuthProvider('microsoft.com');
+    if (name === 'yahoo') return new firebase.auth.OAuthProvider('yahoo.com');
+    return null;
+  }
+
+  async function socialSignIn(name) {
+    document.getElementById('msg').textContent = '';
+    try {
+      const provider = getProvider(name);
+      // set additional scopes if needed: provider.addScope('email');
+      const result = await auth.signInWithPopup(provider);
+      const idToken = await result.user.getIdToken();
+      // send ID token to backend to create secure session cookie
+      await sendTokenToServer(idToken);
+      document.getElementById('msg').style.color='green';
+      document.getElementById('msg').textContent = 'Signed in successfully';
+      // redirect to app dashboard if needed
+      // window.location.href = '/app';
+    } catch (err) {
+      document.getElementById('msg').textContent = err.message;
+      console.error(err);
+    }
+  }
+
+  async function emailSignUp() {
+    document.getElementById('msg').textContent = '';
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    try {
+      const res = await auth.createUserWithEmailAndPassword(email, pass);
+      // send ID token to server to create session
+      const idToken = await res.user.getIdToken();
+      await sendTokenToServer(idToken);
+      document.getElementById('msg').style.color='green';
+      document.getElementById('msg').textContent = 'Signed up successfully. Verify email if prompted.';
+    } catch (err) {
+      document.getElementById('msg').textContent = err.message;
+    }
+  }
+
+  // Send ID token to server endpoint that will create a session cookie
+  async function sendTokenToServer(idToken) {
+    const resp = await fetch('/sessionLogin', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({idToken})
+    });
+    if (!resp.ok) {
+      const text = await resp.text();
+      throw new Error('Server error: ' + text);
+    }
+  }
+
+</script>
+</body>
+  </html>
